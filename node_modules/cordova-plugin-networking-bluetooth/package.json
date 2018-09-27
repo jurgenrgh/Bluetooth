@@ -1,0 +1,60 @@
+{
+  "_from": "cordova-plugin-networking-bluetooth",
+  "_id": "cordova-plugin-networking-bluetooth@1.0.3",
+  "_inBundle": false,
+  "_integrity": "sha1-FnfRAPC131KYWPm4oxDD91vehG0=",
+  "_location": "/cordova-plugin-networking-bluetooth",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "cordova-plugin-networking-bluetooth",
+    "name": "cordova-plugin-networking-bluetooth",
+    "escapedName": "cordova-plugin-networking-bluetooth",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/cordova-plugin-networking-bluetooth/-/cordova-plugin-networking-bluetooth-1.0.3.tgz",
+  "_shasum": "1677d100f0b5df529858f9b8a310c3f75bde846d",
+  "_spec": "cordova-plugin-networking-bluetooth",
+  "_where": "J:\\PhoneGapApps\\bluetooth",
+  "author": {
+    "name": "Franco Bugnano"
+  },
+  "bundleDependencies": false,
+  "cordova": {
+    "id": "cordova-plugin-networking-bluetooth",
+    "platforms": [
+      "android"
+    ]
+  },
+  "deprecated": false,
+  "description": "Bluetooth Networking Plugin for Cordova",
+  "homepage": "https://bitbucket.org/bugnano/cordova-plugin-networking-bluetooth#readme",
+  "keywords": [
+    "cordova",
+    "bluetooth",
+    "network",
+    "networking",
+    "rfcomm",
+    "socket",
+    "client",
+    "server",
+    "peer",
+    "p2p",
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "license": "Apache 2.0",
+  "name": "cordova-plugin-networking-bluetooth",
+  "repository": {
+    "type": "hg",
+    "url": "git+https://bitbucket.org/bugnano/cordova-plugin-networking-bluetooth.git"
+  },
+  "version": "1.0.3"
+}

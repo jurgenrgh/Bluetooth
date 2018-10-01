@@ -1,54 +1,199 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8" />
 
-    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, width=device-width, height=device-height" />
-    <link rel="stylesheet" type="text/css" href="css/index.css" />
-    <title>Bluetooth</title>
-    <script type="text/javascript" src="cordova.js"></script>
-    <script type="text/javascript" src="js/index.js"></script>
-    <script type="text/javascript" src="js/popupBox.js"></script>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, width=device-width, height=device-height" />
+  <!--Import materialize.css-->
+  <link rel="stylesheet" type="text/css" href="css/materialize.min.css" media="screen,projection" />
+  <link rel="stylesheet" type="text/css" href="css/console.css" />
+  <link rel="stylesheet" type="text/css" href="css/index.css" />
+  <!--link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"-->
+  <!--link rel="stylesheet" type="text/css" href="J:/PhoneGapApps/Bluetooth/node_modules/material-design-icons/iconfont/material-icons.css"-->
+  <title>Bluetooth</title>
+  <script type="text/javascript" src="cordova.js"></script>
+
+  <script type="text/javascript" src="js/popupbox.js"></script>
+  <!--JavaScript at end of body for optimized loading-->
+  <script type="text/javascript" src="js/materialize.min.js"></script>
+  <script type="text/javascript" src="js/index.js"></script>
 </head>
 
 <body>
-  <!-- The Modal MessageBox:  -->
-  <!-- Normally invisible -->
+  <!-- The Modal MessageBox:  ----------------------->
+  <!-- Normally invisible --------------------------->
   <div id="msgBox" class="modal">
-     <!-- Modal content -->
-     <div class="modal-content">
-        <span id="xModalBox" class="close-msg">&times;</span>
-        <p id="modalMsgText">Message Box Text</p>
-     </div>
+    <!-- Modal content -->
+    <div class="modal-content">
+      <span id="xModalBox" class="close-msg">&times;</span>
+      <p id="modalMsgText">Message Box Text</p>
+    </div>
   </div>
 
   <div id="msgBoxOK" class="modal">
-     <!-- Modal content -->
-     <div class="modal-content">
-        <span id="xModalBoxOK" class="close-msg">&times;</span>
-        <p id="modalMsgTextOK">OK Message Box Text</p>
-        <button id="okButton" onclick=okButtonAction(this.id) value="okButton" class="modal-button">OK</button>
-     </div>
+    <!-- Modal content -->
+    <div class="modal-content">
+      <span id="xModalBoxOK" class="close-msg">&times;</span>
+      <p id="modalMsgTextOK">OK Message Box Text</p>
+      <button id="okButton" onclick=okButtonAction(this.id) value="okButton" class="modal-button">OK</button>
+    </div>
   </div>
 
   <div id="msgBoxYesNo" class="modal">
-     <!-- Modal content -->
-     <div class="modal-content">
-        <span id="xModalBoxYesNo" class="close-msg">&times;</span>
-        <p id="modalMsgTextYesNo">Yes/No Message Box Text</p>
-        <button id="yesButton" onclick=yesButtonAction(this.id) value="yesButton" class="modal-button">Yes</button>
-        <button id="noButton" onclick=noButtonAction(this.id) value="noButton" class="modal-button">No</button>
-     </div>
+    <!-- Modal content -->
+    <div class="modal-content">
+      <span id="xModalBoxYesNo" class="close-msg">&times;</span>
+      <p id="modalMsgTextYesNo">Yes/No Message Box Text</p>
+      <button id="yesButton" onclick=yesButtonAction(this.id) value="yesButton" class="modal-button">Yes</button>
+      <button id="noButton" onclick=noButtonAction(this.id) value="noButton" class="modal-button">No</button>
+    </div>
   </div>
-<!--------------End Modal Message Box: Function Call in popupBox.js--------->
-<!-------------------------------------------------------------------------->
+  <!--------------End Modal Message Box: Function Call in popupBox.js---------->
+  <!--------------------------------------------------------------------------->
 
-  <h1>Bluetooth Messaging</h1>
+  <!--------------------------------------------------------------------------->
+  <!-- Beginning of Messaging Control Page ------------------------------------>
+  <!--------------------------------------------------------------------------->
 
-    <!--This must stay at the bottom-->
-    <script type="text/javascript">
-        app.initialize();
-    </script>
+  <div class="container">
+    <div class="row">
+      <div class="col s2">
+        <img src="img/seagull.png" alt="Seabird Logo" height="40" width="40">
+      </div>
+      <div class="col s10">
+          <h3 class="center-align black-text">Bluetooth Messaging</h3>
+      </div>
+
+    </div>
+    <div class="divider black"></div>
+    <div class="section">
+      <div class="row">
+        <div class="col s3 section-title">Tablet ID</div>
+        <div class="col s8 item-frame" id="this-tablet-name"></div>
+      </div>
+
+      <div class="row">
+        <div class="col s3 section-title">Select</div>
+        <div class="col s4 item-frame">
+          <select class="console-select" id="lho-name" name="lho-name" onchange="handleLhoChange(this)">
+            <option value="" disabled selected>Select LHO</option>
+          </select>
+        </div>
+
+        <div class="col s4 item-frame">
+          <select class="console-select" id="rho-name" name="rho-name" onchange="handleRhoChange(this)">
+            <option value="" disabled selected>Select RHO</option>
+          </select>
+
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col s3 section-title">Connect</div>
+        <div class="col s4 item-title ">
+          <a class="btn waves-effect black-text" style="display:block;width:100%;font-weight:600" onclick="startCalling()">Call</a>
+        </div>
+
+        <div class="col s4 item-title">
+          <a class="btn waves-effect black-text" style="display:block;width:100%;font-weight:600" onclick="startBtListening()">Listen</a>
+        </div>
+        <div class="col s2"></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col s4 section-title">Status</div>
+      <div class="col s4 item-title"></div>
+      <div class="col s4 item-title"></div>
+    </div>
+
+    <div class="row">
+      <div class="col s1"></div>
+      <div class="col s3 item-title">Disconnected</div>
+      <div class="col s1"><span id="lho-disconnected" class="dot-red"></span></div>
+      <div class="col s3"></div>
+      <div class="col s1"><span id="rho-disconnected" class="dot-red"></span></div>
+      <div class="col s3"></div>
+    </div>
+    <div class="row">
+      <div class="col s1"></div>
+      <div class="col s3 item-title">Waiting</div>
+      <div class="col s1"><span id="lho-waiting" class="dot-transparent"></span></div>
+      <div class="col s3"></div>
+      <div class="col s1"><span id="rho-waiting" class="dot-transparent"></span></div>
+      <div class="col s3"></div>
+    </div>
+    <div class="row">
+      <div class="col s1"></div>
+      <div class="col s3  item-title">Connected</div>
+      <div class="col s1"><span id="lho-connected" class="dot-transparent"></span></div>
+      <div class="col s3"></div>
+      <div class="col s1"><span id="rho-connected" class="dot-transparent"></span></div>
+      <div class="col s3"></div>
+    </div>
+
+    <div class="row">
+      <div class="col s3 section-title">Message</div>
+      <div class="col s4">
+        <a class="btn waves-effect black-text" style="display:block;width:100%;font-weight:600" onclick="msgToLho()">Send
+          to LHO</a>
+      </div>
+      <div class="col s4">
+        <a class="btn waves-effect black-text" style="display:block;width:100%;font-weight:600" onclick="msgToRho()">Send
+          to RHO</a>
+      </div>
+      <div class="col s1"></div>
+    </div>
+    <div class="row">
+      <div class="col s1"></div>
+      <div class="col s10">
+        <input class="console-message-input" type="text" id="msg-send" name="msg-send"
+        onfocus="if(this.value == 'Enter Text') { this.value = ''; }" value="Enter Text"/>
+         
+      </div>
+      <div class="col s1"></div>
+    </div>
+    <div class="row">
+      <div class="valign-wrapper">
+        <div class="col s1"></div>
+        <div class="col s3 item-title">Received</div>
+
+        <div class="col s4">
+
+          <p>
+            <label>
+              <input id="checkBoxLeft" type="checkbox" disabled="disabled" />
+              <span class="black-text" style="font-size:1.5rem;">From Left</span>
+            </label>
+          </p>
+
+        </div>
+        <div class="col s4">
+          <p>
+            <label>
+              <input id="checkBoxRight" type="checkbox" disabled="disabled" />
+              <span class="black-text" style="font-size:1.5rem;">From Right</span>
+            </label>
+          </p>
+
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s1"></div>
+      <div class="col s10">
+        <form onsubmit="submitSendMessage(event)" action="javascript:void(0);">
+          <input class="console-message-input" type="text" id="msg-rcvd" name="msg-rcvd" disabled>
+        </form>
+      </div>
+      <div class="col s1"></div>
+    </div>
+  </div>
+
+  <!--This must stay at the bottom-->
+  <script type="text/javascript">
+    app.initialize();
+  </script>
 </body>
 
 </html>

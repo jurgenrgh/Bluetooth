@@ -34,6 +34,18 @@
     "cordova-plugin-file-transfer": {
       "PACKAGE_NAME": "com.phonegap.bluetooth"
     },
+    "cordova-plugin-geolocation": {
+      "PACKAGE_NAME": "com.phonegap.bluetooth"
+    },
+    "cordova-plugin-globalization": {
+      "PACKAGE_NAME": "com.phonegap.bluetooth"
+    },
+    "cordova-plugin-inappbrowser": {
+      "PACKAGE_NAME": "com.phonegap.bluetooth"
+    },
+    "cordova-plugin-media": {
+      "PACKAGE_NAME": "com.phonegap.bluetooth"
+    },
     "cordova-plugin-networking-bluetooth": {
       "PACKAGE_NAME": "com.phonegap.bluetooth"
     }

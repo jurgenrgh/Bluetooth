@@ -16,6 +16,8 @@
 // The popup messageBox is called with a text message
 // and 0, 1, or 2 buttons. The buttons appear only if their
 // text argument (label on the button) is not blank
+var popupTimeOutRunning;
+
 function popupBox(msgText, timeout) {
   clearTimeout(popupTimeOutRunning);
 

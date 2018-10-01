@@ -1,0 +1,140 @@
+.grid-wrapper {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 3rem 2rem 3rem 3rem 3rem 3rem 3rem 3rem 3rem 3rem 3rem 3rem 3rem 1rem 3rem 3rem 3rem 3rem 3rem 1rem 3rem 3rem;
+  /*grid-auto-rows: 3.0rem;*/
+  grid-gap: 1px 8px;
+
+  grid-row-gap: 8px;
+  padding: 16px;
+  vertical-align: bottom;
+  background: var(--main-bg-color);
+}
+
+.item-inline {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  font-size: 2.0rem;
+  vertical-align: bottom;
+  grid-gap: 6px;
+  background: var(--main-bg-color);
+}
+
+/* Headers */
+
+.page-title {
+  background: var(--main-bg-color);
+  grid-column: 1 / span 3;
+  color: black;
+  text-align: center;
+  font-size: 3rem;
+  padding-bottom: 8px;
+}
+
+.section-title {
+  background: var(--main-bg-color);
+  color: black;
+  font-size: 1.75rem;
+  font-weight: bold;
+  /*display: flex;*/
+  /*align-items: center;*/
+  /*justify-content: left;*/
+}
+
+.item-title {
+  background: var(--main-bg-color);
+  color: black;
+  font-size: 1.5rem;
+  /*display: flex;*/
+  align-items: center;
+  justify-content: left;
+  padding-left: 8px;
+}
+
+/* specific item styles */
+
+.item-blank {
+  background: var(--main-bg-color);
+  color: black;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+}
+
+.item-frame {
+  box-sizing: border-box;
+  background: var(--main-bg-color);
+  color: black;
+  font-size: 1.25rem;
+  border-style: solid;
+  border-width: 1px;
+  border-color: black;
+  display: flex;
+  height: 3rem;
+  align-items: center;
+  justify-content: left;
+  margin: 2px;
+}
+
+.item-button {
+  background: var(--main-bg-color);
+  color: black;
+  font-size: 2.0rem;
+  /*border-style: solid;*/
+  /*border-width: 2px;*/
+  /*border-color: black;*/
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.push-button {
+  font-size: 2rem;
+  font-weight: normal;
+  background-color: transparent;
+  box-shadow: none;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: black;
+  width: 100%;
+}
+
+.dot-red {
+  height: 25px;
+  width: 25px;
+  background-color: red;
+  border-radius: 50%;
+  display: inline-block;
+  margin-left: 15px;
+}
+
+.dot-green {
+  height: 25px;
+  width: 25px;
+  background-color: green;
+  border-radius: 50%;
+  display: inline-block;
+  margin-left: 15px;
+}
+
+.dot-yellow {
+  height: 25px;
+  width: 25px;
+  background-color: yellow;
+  border-radius: 50%;
+  display: inline-block;
+  margin-left: 15px;
+}
+
+.dot-transparent {
+  height: 25px;
+  width: 25px;
+  background-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  border: 1px solid black;
+  margin-left: 15px;
+}

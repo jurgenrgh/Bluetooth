@@ -1,25 +1,3 @@
-.grid-wrapper {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: 3rem 2rem 3rem 3rem 3rem 3rem 3rem 3rem 3rem 3rem 3rem 3rem 3rem 1rem 3rem 3rem 3rem 3rem 3rem 1rem 3rem 3rem;
-  /*grid-auto-rows: 3.0rem;*/
-  grid-gap: 1px 8px;
-
-  grid-row-gap: 8px;
-  padding: 16px;
-  vertical-align: bottom;
-  background: var(--main-bg-color);
-}
-
-.item-inline {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  font-size: 2.0rem;
-  vertical-align: bottom;
-  grid-gap: 6px;
-  background: var(--main-bg-color);
-}
-
 /* Headers */
 
 .page-title {
@@ -137,4 +115,42 @@
   display: inline-block;
   border: 1px solid black;
   margin-left: 15px;
+}
+
+.input-field input[type=text] {
+  border-bottom: 1px solid #000;
+  text-align: left;
+}
+
+/* label color */
+.input-field label {
+  color: black;
+}
+
+
+#msg-rcvd {
+  border-bottom: 1px solid black;
+}
+
+#msg-rcvd:focus {
+  border-bottom: 2px solid black;
+  box-shadow: 0 1px 0 0 black;
+}
+
+#msg-rcvd:focus+label {
+  color: black;
+}
+
+#msg-send {
+  border-bottom: 1px solid black;
+
+}
+
+#msg-send:focus {
+  border-bottom: 2px solid black;
+  box-shadow: 0 1px 0 0 black;
+}
+
+#msg-send:focus+label {
+  color: black;
 }

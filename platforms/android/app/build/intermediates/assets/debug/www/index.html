@@ -61,7 +61,7 @@
         <img src="img/seagull.png" alt="Seabird Logo" height="40" width="40">
       </div>
       <div class="col s10">
-          <h3 class="center-align black-text">Bluetooth Messaging</h3>
+        <h3 class="center-align black-text">Bluetooth Messaging</h3>
       </div>
 
     </div>
@@ -70,37 +70,48 @@
       <div class="row">
         <div class="col s3 section-title">Tablet ID</div>
         <div class="col s8 item-frame" id="this-tablet-name"></div>
+        <div class="col s1"></div>
       </div>
 
+      <!-- <div class="row">
+        <div class="col s3"></div>
+        <div class="col s4 section-title center">Left</div>
+        <div class="col s4 section-title center">Right</div>
+        <div class="col s1"></div>
+      </div> -->
+
       <div class="row">
-        <div class="col s3 section-title">Select</div>
-        <div class="col s4 item-frame">
-          <select class="console-select" id="lho-name" name="lho-name" onchange="handleLhoChange(this)">
-            <option value="" disabled selected>Select LHO</option>
+        <div class="col s3 section-title">Neighbors</div>
+        <div class="input-field col s4">
+          <select id="lho-name" name="lho-name" onchange="handleLhoChange(this)">
+            <option value="" disabled selected>Choose LHO</option>
           </select>
+          <label>LHO</label>
         </div>
 
-        <div class="col s4 item-frame">
-          <select class="console-select" id="rho-name" name="rho-name" onchange="handleRhoChange(this)">
-            <option value="" disabled selected>Select RHO</option>
-          </select>
-
+        <div class="input-field col s4">
+          <input disabled value="" id="rho-name" type="text">
+          <label for="rho-name">RHO</label>
         </div>
+        <div class="col s1"></div>
       </div>
 
       <div class="row">
         <div class="col s3 section-title">Connect</div>
         <div class="col s4 item-title ">
-          <a class="btn waves-effect black-text" style="display:block;width:100%;font-weight:600" onclick="startCalling()">Call</a>
+          <a class="btn waves-effect black-text" style="display:block;width:100%;font-weight:600" onclick="startCalling()">Call
+            LHO</a>
         </div>
 
         <div class="col s4 item-title">
           <a class="btn waves-effect black-text" style="display:block;width:100%;font-weight:600" onclick="startBtListening()">Listen</a>
         </div>
-        <div class="col s2"></div>
+        <div class="col s1"></div>
       </div>
     </div>
 
+    <!--------------------------------------------------------------------->
+    <!--Connection Status-------------------------------------------------->
     <div class="row">
       <div class="col s4 section-title">Status</div>
       <div class="col s4 item-title"></div>
@@ -132,41 +143,60 @@
       <div class="col s3"></div>
     </div>
 
+    <!--Messages-->
     <div class="row">
-      <div class="col s3 section-title">Message</div>
+      <div class="col s3 section-title">Messages</div>
+      <div class="col s9"></div>
+    </div>
+
+    <!-------------------------------------------------------------------------->
+    <!--Outgoing Message Box-->
+    <div class="row" style="margin-bottom: 0px;">
+      <div class="col s1"></div>
+      <div class="input-field col s10">
+        <label class="active" for="msg-send">Outgoing Message</label>
+        <textarea id="msg-send" class="materialize-textarea"></textarea>
+      </div>
+      <div class="col s1"></div>
+    </div>
+
+    <!-------------------------------------------------------------------------------->
+    <!--Send Buttons-->
+    <div class="row" style="margin-top: 0px;">
+      <div class="col s2"></div>
       <div class="col s4">
-        <a class="btn waves-effect black-text" style="display:block;width:100%;font-weight:600" onclick="msgToLho()">Send
+        <a class="btn waves-effect black-text" style="display:block;width:100%;font-weight:600" onclick="msgToLho('')">Send
           to LHO</a>
       </div>
       <div class="col s4">
-        <a class="btn waves-effect black-text" style="display:block;width:100%;font-weight:600" onclick="msgToRho()">Send
+        <a class="btn waves-effect black-text" style="display:block;width:100%;font-weight:600" onclick="msgToRho('')">Send
           to RHO</a>
       </div>
-      <div class="col s1"></div>
+      <div class="col s2"></div>
     </div>
-    <div class="row">
+
+    <!------------------------------------------------------------------------->
+    <!--Incoming Message ------------------------------------------------------>
+    <div class="row" style="margin-bottom: 0px;">
       <div class="col s1"></div>
-      <div class="col s10">
-        <input class="console-message-input" type="text" id="msg-send" name="msg-send"
-        onfocus="if(this.value == 'Enter Text') { this.value = ''; }" value="Enter Text"/>
-         
+      <div class="input-field col s10">
+        <label for="msg-rcvd" class="active">Incoming Message</label>
+        <textarea id="msg-rcvd" class="materialize-textarea"></textarea>
       </div>
       <div class="col s1"></div>
     </div>
+
     <div class="row">
       <div class="valign-wrapper">
         <div class="col s1"></div>
         <div class="col s3 item-title">Received</div>
-
         <div class="col s4">
-
           <p>
             <label>
               <input id="checkBoxLeft" type="checkbox" disabled="disabled" />
               <span class="black-text" style="font-size:1.5rem;">From Left</span>
             </label>
           </p>
-
         </div>
         <div class="col s4">
           <p>
@@ -175,19 +205,25 @@
               <span class="black-text" style="font-size:1.5rem;">From Right</span>
             </label>
           </p>
-
         </div>
       </div>
     </div>
+
+    <!--------------------------------------------------------------------------------------->
+    <!-- Reset and reconnect-->
     <div class="row">
-      <div class="col s1"></div>
-      <div class="col s10">
-        <form onsubmit="submitSendMessage(event)" action="javascript:void(0);">
-          <input class="console-message-input" type="text" id="msg-rcvd" name="msg-rcvd" disabled>
-        </form>
+      <div class="col s2"></div>
+      <div class="col s4 item-title ">
+        <a class="btn waves-effect black-text" style="display:block;width:100%;font-weight:600" onclick="generalReset()">Reset</a>
       </div>
-      <div class="col s1"></div>
+
+      <div class="col s4 item-title">
+        <a class="btn waves-effect black-text" style="display:block;width:100%;font-weight:600" onclick="reConnect()">Reconnect</a>
+      </div>
+      <div class="col s2"></div>
     </div>
+  </div>
+
   </div>
 
   <!--This must stay at the bottom-->

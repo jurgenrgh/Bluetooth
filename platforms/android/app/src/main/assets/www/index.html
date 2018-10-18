@@ -3,7 +3,8 @@
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, width=device-width, height=device-height" />
+  <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, width=device-width" />
+
   <!--Import materialize.css-->
   <link rel="stylesheet" type="text/css" href="css/materialize.min.css" media="screen,projection" />
   <link rel="stylesheet" type="text/css" href="css/console.css" />
@@ -11,45 +12,27 @@
   <!--link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"-->
   <!--link rel="stylesheet" type="text/css" href="J:/PhoneGapApps/Bluetooth/node_modules/material-design-icons/iconfont/material-icons.css"-->
   <title>Bluetooth</title>
-  <script type="text/javascript" src="cordova.js"></script>
 
-  <script type="text/javascript" src="js/popupbox.js"></script>
-  <!--JavaScript at end of body for optimized loading-->
-  <script type="text/javascript" src="js/materialize.min.js"></script>
-  <script type="text/javascript" src="js/index.js"></script>
 </head>
 
 <body>
-  <!-- The Modal MessageBox:  ----------------------->
-  <!-- Normally invisible --------------------------->
-  <div id="msgBox" class="modal">
-    <!-- Modal content -->
-    <div class="modal-content">
-      <span id="xModalBox" class="close-msg">&times;</span>
-      <p id="modalMsgText">Message Box Text</p>
-    </div>
-  </div>
-
-  <div id="msgBoxOK" class="modal">
-    <!-- Modal content -->
-    <div class="modal-content">
-      <span id="xModalBoxOK" class="close-msg">&times;</span>
-      <p id="modalMsgTextOK">OK Message Box Text</p>
-      <button id="okButton" onclick=okButtonAction(this.id) value="okButton" class="modal-button">OK</button>
-    </div>
-  </div>
-
-  <div id="msgBoxYesNo" class="modal">
-    <!-- Modal content -->
-    <div class="modal-content">
-      <span id="xModalBoxYesNo" class="close-msg">&times;</span>
-      <p id="modalMsgTextYesNo">Yes/No Message Box Text</p>
-      <button id="yesButton" onclick=yesButtonAction(this.id) value="yesButton" class="modal-button">Yes</button>
-      <button id="noButton" onclick=noButtonAction(this.id) value="noButton" class="modal-button">No</button>
-    </div>
-  </div>
-  <!--------------End Modal Message Box: Function Call in popupBox.js---------->
   <!--------------------------------------------------------------------------->
+  <!--Modal Dialog Version 2, using Materialize-------------------------------->
+  <!--------------------------------------------------------------------------->
+
+  <!-- Modal Structure -->
+  <div id="modalDialog" class="modal">
+    <div class="modal-content">
+      <h3 id="dialog-header" class="left-align">Modal Header</h3>
+      <p id="dialog-text" class="left-align flow-text">A bunch of text</p>
+      <a id="ok-button" href="javascript:void(0);" class="modal-close waves-effect waves-green btn-large" onclick="okModalClicked();"><span
+          id="ok-span">OK</span></a>
+      <a id="yes-button" href="javascript:void(0);" class="modal-close waves-effect waves-green btn-large" onclick="yesModalClicked();"><span
+          id="yes-span">Yes</span></a>
+      <a id="no-button" href="javascript:void(0);" class="modal-close waves-effect waves-green btn-large" onclick="noModalClicked();"><span
+          id="no-span">No</span></a>
+    </div>
+  </div>
 
   <!--------------------------------------------------------------------------->
   <!-- Beginning of Messaging Control Page ------------------------------------>
@@ -69,16 +52,10 @@
     <div class="section">
       <div class="row">
         <div class="col s3 section-title">Tablet ID</div>
-        <div class="col s8 item-frame" id="this-tablet-name"></div>
+        <!--<div class="col s8 item-frame" id="this-tablet-name"></div>-->
+        <div class="col s8 item-blank" id="this-tablet-name"></div>
         <div class="col s1"></div>
       </div>
-
-      <!-- <div class="row">
-        <div class="col s3"></div>
-        <div class="col s4 section-title center">Left</div>
-        <div class="col s4 section-title center">Right</div>
-        <div class="col s1"></div>
-      </div> -->
 
       <div class="row">
         <div class="col s3 section-title">Neighbors</div>
@@ -93,7 +70,7 @@
           <input disabled value="" id="rho-name" type="text">
           <label for="rho-name">RHO</label>
         </div>
-        <div class="col s1"></div>
+        <div class="col s1"><i class="material-icons help-icon">help</i></div>
       </div>
 
       <div class="row">
@@ -106,7 +83,7 @@
         <div class="col s4 item-title">
           <a class="btn waves-effect black-text" style="display:block;width:100%;font-weight:600" onclick="startBtListening()">Listen</a>
         </div>
-        <div class="col s1"></div>
+        <div class="col s1"><i class="material-icons help-icon">help</i></div>
       </div>
     </div>
 
@@ -115,7 +92,8 @@
     <div class="row">
       <div class="col s4 section-title">Status</div>
       <div class="col s4 item-title"></div>
-      <div class="col s4 item-title"></div>
+      <div class="col s3 item-title"></div>
+      <div class="col s1"></div>
     </div>
 
     <div class="row">
@@ -146,7 +124,9 @@
     <!--Messages-->
     <div class="row">
       <div class="col s3 section-title">Messages</div>
-      <div class="col s9"></div>
+      <div class="col s8"></div>
+      <div class="col s1"></div>
+      
     </div>
 
     <!-------------------------------------------------------------------------->
@@ -172,7 +152,8 @@
         <a class="btn waves-effect black-text" style="display:block;width:100%;font-weight:600" onclick="msgToRho('')">Send
           to RHO</a>
       </div>
-      <div class="col s2"></div>
+      <div class="col s1"></div>
+      <div class="col s1"><i class="material-icons help-icon">help</i></div>
     </div>
 
     <!------------------------------------------------------------------------->
@@ -212,20 +193,54 @@
     <!--------------------------------------------------------------------------------------->
     <!-- Reset and reconnect-->
     <div class="row">
-      <div class="col s2"></div>
-      <div class="col s4 item-title ">
+      
+      <div class="col s3 item-title ">
+        <a class="btn waves-effect black-text" style="display:block;width:100%;font-weight:600" onclick="btInit()">Init</a>
+      </div>
+      <div class="col s3 item-title ">
         <a class="btn waves-effect black-text" style="display:block;width:100%;font-weight:600" onclick="generalReset()">Reset</a>
       </div>
 
-      <div class="col s4 item-title">
-        <a class="btn waves-effect black-text" style="display:block;width:100%;font-weight:600" onclick="reConnect()">Reconnect</a>
+      <div class="col s3 item-title">
+        <a class="btn waves-effect black-text" style="display:block;width:100%;font-weight:600" onclick="reConnect()">Connect</a>
       </div>
-      <div class="col s2"></div>
+      <div class="col s3 item-title">
+        <a class="btn waves-effect black-text" style="display:block;width:100%;font-weight:600" onclick="displayStatus(true,false);">Status</a>
+      </div>
+      
     </div>
+
+    <!--------------------------------------------------------------------------------------->
+    <!-- Test-->
+    <div class="row">
+      
+      <div class="col s6 item-title ">
+        <a class="btn waves-effect black-text" style="display:block;width:100%;font-weight:600" onclick="relayLeft()">Relay Left</a>
+      </div>
+      <div class="col s6 item-title ">
+        <a class="btn waves-effect black-text" style="display:block;width:100%;font-weight:600" onclick="relayRight()">Relay Right</a>
+
+      
+      
+    </div>
+
+    <!-- Modal Triggers
+    <a class="waves-effect waves-light btn modal-trigger" href="#modalDialog">Modal Direct</a>
+    <a class="waves-effect waves-light btn" href="javascript:void(0);" onClick="popupBox('Title', textSample, 'id', 'oktext', '', '')">Modal
+      OK</a>
+    <a class="waves-effect waves-light btn" href="javascript:void(0);" onClick="popupBox('Title', textSample, 'id', '', 'yestext', 'notext')">Modal
+      YES NO</a> -->
   </div>
 
-  </div>
 
+
+  <script type="text/javascript" src="cordova.js"></script>
+  <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+  <!--JavaScript at end of body for optimized loading-->
+  <script type="text/javascript" src="js/materialize.min.js"></script>
+  <script type="text/javascript" src="js/index.js"></script>
+  <script type="text/javascript" src="js/console.js"></script>
+  <script type="text/javascript" src="js/ModalDialog.js"></script>
   <!--This must stay at the bottom-->
   <script type="text/javascript">
     app.initialize();

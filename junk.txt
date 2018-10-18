@@ -189,3 +189,34 @@ input.console-message-input[type="text"] {
           </select>
           <label>RHO</label>
         </div>
+
+        <!-- The Modal MessageBox:  ----------------------->
+  <!-- Normally invisible --------------------------->
+  <div id="msgBox" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+      <span id="xModalBox" class="close-msg">&times;</span>
+      <p id="modalMsgText">Message Box Text</p>
+    </div>
+  </div>
+
+  <div id="msgBoxOK" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+      <span id="xModalBoxOK" class="close-msg">&times;</span>
+      <p id="modalMsgTextOK">OK Message Box Text</p>
+      <button id="okButton" onclick=okButtonAction(this.id) value="okButton" class="modal-button">OK</button>
+    </div>
+  </div>
+
+  <div id="msgBoxYesNo" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+      <span id="xModalBoxYesNo" class="close-msg">&times;</span>
+      <p id="modalMsgTextYesNo">Yes/No Message Box Text</p>
+      <button id="yesButton" onclick=yesButtonAction(this.id) value="yesButton" class="modal-button">Yes</button>
+      <button id="noButton" onclick=noButtonAction(this.id) value="noButton" class="modal-button">No</button>
+    </div>
+  </div>
+  <!--------------End Modal Message Box: Function Call in popupBox.js---------->
+  <!--------------------------------------------------------------------------->

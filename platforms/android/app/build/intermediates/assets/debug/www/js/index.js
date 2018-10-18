@@ -11,16 +11,11 @@ var app = {
   bindEvents: function () {
     document.addEventListener('deviceready', this.onDeviceReady, false);
 
-    //////////////////////////////////////////////////////////////////
-    //The following respond to clicks on the x in the
-    //modal box
-    //////////////////////////////////////////////////////////////////
-    var xSpan = document.getElementById("xModalBox");
-    xSpan.addEventListener("click", hidePopupBox, false);
-    xSpan = document.getElementById("xModalBoxOK");
-    xSpan.addEventListener("click", hidePopupBox, false);
-    xSpan = document.getElementById("xModalBoxYesNo");
-    xSpan.addEventListener("click", hidePopupBox, false);
+    //document.addEventListener('DOMContentLoaded', function () {
+    //  M.AutoInit();
+    //  console.log("autoinit");
+    //});
+
 
     //////////////////////////////////////////////////////////////////
     // This mechanism removes focus (blur) from the input box
@@ -52,19 +47,31 @@ var app = {
   // Update DOM on a Received Event
   receivedEvent: function (id) {
     console.log('Received Event: ' + id);
-
+    console.log("width: ", window.innerWidth, "height: ", window.innerHeight);
     //Listener for bluetooth message
     networking.bluetooth.onReceive.addListener(onBtReceiveHandler);
     //Materialize.updateTextFields();
     //General Initialization for Materialize
-    M.AutoInit();
+    //M.AutoInit();
+
+    var elems = document.querySelectorAll('.modal');
+    var instances = M.Modal.init(elems, {
+      inDuration: 0,
+      outDuration: 0,
+      startingTop: 0,
+      endingTop: 0
+    });
+
+    // console.log(instances);
+    //restoreNeighborInfo();
+
     //Get paired Bluetooth devices
     getBtDevices();
   }
 };
 //End of app class
 //////////////////////////////////////////////////////////////
-// Bluetooth Names and addresses
+// Bluetooth Names and addresses - global variables
 
 var testCount = 0;
 
@@ -93,7 +100,8 @@ var rhoConnected = false;
 var lhoSocketId = -1;
 var rhoSocketId = -1;
 var serverSocketId = -1;
-
+var relaySecDelay = 3;
+var relayRepCount = 32;
 
 // This is the 'server' side, of the socket connection
 // The 'server' (listener) is the LHO of the 'client', who requests the connection
@@ -113,12 +121,15 @@ function startBtListening() {
         rhoSocketId = acceptInfo.clientSocketId;
         rhoConnected = true;
         setConnectionState("rho", "connected");
-        networking.bluetooth.close(serverSocketId);
+        //networking.bluetooth.close(serverSocketId);
+        //listeningForConnectionRequest = false;
         console.log("Accepted Connection: ", "Server Socket: " + serverSocketId, "Client RHO Socket: " + rhoSocketId);
       });
     }, function (errorMessage) {
       console.log("error from Listener");
       console.error(errorMessage);
+      popupBox("Bluetooth Listener Error", errorMessage, "btListenerError", "OK", "", "");
+
     });
   }
 }
@@ -145,6 +156,7 @@ function startCalling() {
     }, function (errorMessage) {
       console.log("error from Calling", lhoBtAddress, lhoBtName, lhoSocketId);
       console.error(errorMessage);
+      popupBox("Bluetooth Caller Error", errorMessage, "btCallerError", "OK", "", "");
     });
   }
 }
@@ -163,9 +175,11 @@ function msgToRho(msgText) {
       console.log('Sent ' + bytes_sent + ' bytes ' + val + ' rhoSocket: ' + rhoSocketId);
     }, function (errorMessage) {
       console.log('Send failed: ' + errorMessage + ' msg: ' + val + ' rhoSocket: ' + rhoSocketId);
+      popupBox("sendToRho Error " + rhoSocketId, errorMessage, "id", "OK", "", "");
     });
   } else {
     console.log("RHO not connected, message not sent");
+    popupBox("SendToRho Error " + rhoSocketId, "not connected", "id", "OK", "", "");
   }
 }
 
@@ -183,10 +197,51 @@ function msgToLho(msgText) {
       console.log('Sent ' + bytes_sent + ' bytes ' + val + ' lhoSocket: ' + lhoSocketId);
     }, function (errorMessage) {
       console.log('Send failed: ' + errorMessage + ' msg: ' + val + ' lhoSocket: ' + lhoSocketId);
+      popupBox("sendToLho Error " + lhoSocketId, errorMessage, "id", "OK", "", "");
     });
   } else {
     console.log("LHO not connected, message not sent");
+    popupBox("sendToLho Error " +  lhoSocketId, "not connected", "id", "OK", "", "");
   }
+}
+
+// text = any string
+// count = nbr of times to propagate
+// side = "lho" or "rho"
+// text is made longer by adding current count
+// when the message is received count will be decremented by 1
+// until it reaches 0. The message gets longer due to prefix
+//   
+function relayTestMessage( text, count, side, secDelay){
+  var rep = count - 1;
+  var numText = rep.toString();
+  var msDelay = 1000 * secDelay; 
+  if(rep > 0)
+  {
+    var output = "relay-" + side + " " + numText + " " + text;
+    if(side == "lho"){
+      window.setTimeout(function(){
+      msgToLho(output);}, msDelay);
+    }
+    if(side == "rho"){
+      window.setTimeout(function(){
+        msgToRho(output);}, msDelay);
+    }
+  } 
+}
+
+function relayLeft(){
+  var text = "To LHO: Lorem ipsum dolor sit amet";
+  var count = relayRepCount; 
+  
+  relayTestMessage(text, count, "lho", relaySecDelay);
+}
+
+function relayRight(){
+  var text = "To RHO: Lorem ipsum dolor sit amet";
+  var count = relayRepCount; 
+  
+  relayTestMessage(text, count, "rho", relaySecDelay);
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -288,86 +343,22 @@ function getBtDevices() {
       pairedBtAddresses[i] = devices[i].address;
       addDeviceSelection(i);
     }
-  });
 
+    // console.log("GetDevices lhoName: ", lhoBtName);
+    // if (lhoBtName != null) {
+    //   var el = document.getElementById("lho-name");
+    //   console.log("GetDevices lhoName not null: ", lhoBtName);
+    //   for (i = 0; i < el.options.length; i++) {
+    //     console.log(i, el.options[i].text, el.options[i].value);
+    //     if (el.options[i].text == lhoBtName) {
+    //       el.selectedIndex = i;
+    //       console.log("Selected: ", i, el.options[i].text, el.options[i].value);
+    //     }
+    //   }
+    // }
+  });
   setConnectionState("rho", "disconnected");
   setConnectionState("lho", "disconnected");
-}
-/////////////////////////////////////////////////////////////////////
-// Puts pairedBtNames[ix] into LHO and RHO text
-// device selection lists if not already present
-// pairedBtAddresses[ix] into option.value
-//
-function addDeviceSelection(ix) {
-  //var elRho = document.getElementById("rho-name");
-  var elLho = document.getElementById("lho-name");
-  var opt;
-
-  // elRho.value = pairedBtAddresses[ix];
-  // //console.log("Add RHO Device: ", ix, pairedBtNames[ix], pairedBtAddresses[ix]);
-  // if (!(elRho.selectedIndex >= 0)) { //a new entry
-  //   opt = document.createElement("option");
-  //   opt.text = pairedBtNames[ix];
-  //   opt.value = pairedBtAddresses[ix];
-  //   //option.selected = true;
-  //   elRho.add(opt, ix + 1);
-  //   elRho.selectedIndex = "0";
-  //   rhoBtName = opt.text;
-  //   rhoBtAddress = opt.value;
-  //   elRho.onchange();
-  //   //console.log("RHO added");
-  // }
-
-  elLho.value = pairedBtAddresses[ix];
-  //console.log("Add LHO Device: ", ix, pairedBtNames[ix], pairedBtAddresses[ix]);
-  if (!(elLho.selectedIndex >= 0)) { //a new entry
-    opt = document.createElement("option");
-    opt.text = pairedBtNames[ix];
-    opt.value = pairedBtAddresses[ix];
-    //option.selected = true;
-    elLho.add(opt, ix + 1);
-    elLho.selectedIndex = "0";
-    lhoBtName = opt.text;
-    lhoBtAddress = opt.value;
-    elLho.onchange();
-    //console.log("LHO added");
-  }
-}
-
-//////////////////////////////////////////////////////////////////////////////////////
-// Called when selection of LHO Tablet changes
-// val is the assigned value corresponding to the chosen list item
-function handleLhoChange(e) {
-  var ix = e.selectedIndex;
-  lhoBtName = e.options[ix].text;
-  lhoBtAddress = e.options[ix].value;
-  //console.log("LHO tablet selected: " + lhoBtName + " " + lhoBtAddress);
-  //e.material_select();
-  M.FormSelect.init(e, e.options);
-}
-
-///////////////////////////////////////////////////////////////////////////////////////
-// Called when RHO tablet changes
-// val is the assigned value corresponding to the chosen list item
-function handleRhoChange(e) {
-  var ix = e.selectedIndex;
-  rhoBtName = e.options[ix].text;
-  rhoBtAddress = e.options[ix].value;
-  //console.log("RHO tablet selected: " + rhoBtName + " " + rhoBtAddress);
-  //e.material_select();
-  M.FormSelect.init(e, e.options);
-}
-
-///////////////////////////////////////////////////////////////////////////////////////
-// name = "left" or "right"
-// set = Boolean true means set check mark, false means clear
-function checkCheckBox(name, set) {
-  if (name == "left") {
-    document.getElementById("checkBoxLeft").checked = set;
-  }
-  if (name == "right") {
-    document.getElementById("checkBoxRight").checked = set;
-  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -438,151 +429,3 @@ function stringFromArrayBuffer(buf) {
   return String.fromCharCode.apply(null, new Uint8Array(buf));
 }
 
-// This clears everything and starts over
-// To make the same connections as before
-// use "reconnect"; but you must do the same for the neighbors 
-function generalReset() {
-
-  // To Reset
-  // thisTabletBtName, thisTabletBtAddress
-  // pairedBtNames, pairedBtAddresses;
-
-  var leftEl = document.getElementById("lho-name");
-  var rightEl = document.getElementById("rho-name");
-  var leftIx = leftEl.selectedIndex;
-  var rightIx = rightEl.selectedIndex;
-
-  var leftOpt = leftEl.options;
-  var rightOpt = rightEl.options;
-
-  //console.log("Before Reset LHO: ix, text, value: ", leftIx, leftOpt[leftIx].text, leftOpt[leftIx].value);
-  //console.log("Before Reset RHO: ix, text, value: ", rightIx, rightOpt[rightIx].text, rightOpt[rightIx].value);
-
-  //Save old values for reconnection
-  rhoBtNameOld = rhoBtName;
-  lhoBtNameOld = lhoBtName;
-  rhoBtAddressOld = rhoBtAddress;
-  lhoBtAddressOld = lhoBtAddress;
-
-  //console.log( "Before Get Devices: left name, right name, left addr, right addr: ", lhoBtName, rhoBtName, lhoBtAddress, rhoBtAddress);
-
-  getBtDevices();
-
-  //console.log( "After Get Devices: left name, right name, left addr, right addr: ", lhoBtName, rhoBtName, lhoBtAddress, rhoBtAddress);
-
-  rhoBtName = rhoBtNameOld;
-  lhoBtName = lhoBtNameOld;
-  rhoBtAddress = rhoBtAddressOld;
-  lhoBtAddress = lhoBtAddressOld;
-
-  //This will restore the selection in both dropdowns
-  rightEl.value = rhoBtAddress;
-  leftEl.value = lhoBtAddress;
-
-  // for (var i = 0; i < leftEl.options.length; i++) {
-  //   if (leftEl.options[i].text === lhoBtNameOld) {
-  //     leftEl.text = lhoBtNameOld;
-  //     leftEl.selectedIndex = i;
-  //     break;
-  //   }
-  // }
-
-  //  for (var i = 0; i < rightEl.options.length; i++) {
-  //   if (rightEl.options[i].text === rhoBtNameOld) {
-  //     rightEl.text = rhoBtNameOld;
-  //     rightEl.selectedIndex = i;
-  //     break;
-  //   }
-  // }
-
-  // leftIx = leftEl.selectedIndex;
-  // rightIx = rightEl.selectedIndex;
-
-  // leftOpt = leftEl.options;
-  // rightOpt = rightEl.options;
-
-  // console.log("After Reset LHO: ix, text, value: ", leftIx, leftOpt[leftIx].text, leftOpt[leftIx].value);
-  // console.log("After Reset RHO: ix, text, value: ", rightIx, rightOpt[rightIx].text, rightOpt[rightIx].value);
-
-  // console.log("After Reset LHO: Name Addr: ", lhoBtName, lhoBtAddress);
-  // console.log("After Reset RHO: Name Addr: ", rhoBtName, rhoBtAddress);
-
-  // Bluetooth status variables
-  // uuid = '94f39d29-7d6d-437d-973b-fba39e49d4ee';
-  if (listeningForConnectionRequest) {
-    networking.bluetooth.close(serverSocketId);
-  }
-  listeningForConnectionRequest = false;
-  serverSocketId = -1;
-
-  if (lhoConnected) {
-    networking.bluetooth.close(lhoSocketId);
-  }
-  setConnectionState("lho", "disconnected");
-  lhoSocketId = -1;
-
-  if (rhoConnected) {
-    networking.bluetooth.close(rhoSocketId);
-  }
-  setConnectionState("rho", "disconnected");
-  lhoSocketId = -1;
-
-  lhoConnected = false;
-  rhoConnected = false;
-}
-
-function reConnect() {
-  startBtListening();
-  startCalling();
-}
-
-// Some messages require action
-// An example is the msg that communicates rho name and address
-// The content determines what to do
-function msgInterpreter(msgSource, msgText) {
-  var ix1, ix2;
-  var prefixName = "rho-name: ";
-  var prefixAddr = "rho-addr: ";
-  var strName = "";
-  var strAddr = "";
-
-  console.log( "interpreter: ", msgSource, msgText);
-  if (msgSource == "rho"){ 
-    ix1 = msgText.indexOf(prefixName);
-    console.log(ix1, prefixName);
-    if (ix1 >= 0) {
-      ix1 += prefixName.length;
-      strName = msgText.substring(ix1);
-      console.log(ix1, strName);
-      ix2 = strName.indexOf(" ");
-      strName = strName.slice(0, ix2);
-      console.log(ix2, strName);
-    }
-
-    ix1 = msgText.indexOf(prefixAddr);
-    console.log(ix1, prefixAddr);
-    if (ix1 >= 0) {
-      ix1 += prefixAddr.length;
-      strAddr = msgText.substring(ix1);
-      console.log(ix1, strAddr);
-      ix2 = strAddr.indexOf(" ");
-      strAddr = strAddr.slice(0, ix2);
-      console.log(ix2, strAddr);
-    }
-  }
-
-  console.log( strName, strAddr );
-
-  // Accept the transmitted values
-  // These go into the rho dropdown and globals
-  if ((strName.length > 0) && (strAddr.length > 0)) {
-    rhoBtName = strName;
-    rhoBtAddress = strAddr;
-
-    //Sets selected option in txtbox
-    var rightEl = document.getElementById("rho-name");
-    rightEl.value = rhoBtName;
-    M.updateTextFields();
-    M.textareaAutoResize(rightEl);
-  }
-}

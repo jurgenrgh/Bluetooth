@@ -1,5 +1,7 @@
 /* Headers */
-
+a{
+  display:inline;
+}
 .page-title {
   background: var(--main-bg-color);
   grid-column: 1 / span 3;
@@ -34,9 +36,9 @@
 .item-blank {
   background: var(--main-bg-color);
   color: black;
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   display: flex;
-  align-items: center;
+  align-items: bottom;
   justify-content: left;
 }
 
